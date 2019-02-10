@@ -7,11 +7,17 @@ export class CookieService {
   }
 
   set(key: string, value: string): void;
+  // tslint:disable-next-line:unified-signatures
   set(key: string, value: string, expires: Date): void;
   set(key: string, value: string, expires?: Date): void {
     let cookieValue = `${key}=${value}`;
-    if (expires) cookieValue += `;expires='${expires.toUTCString()}'`
+    if (expires) {
+    cookieValue += `;expires='${expires.toUTCString()}'`; }
     document.cookie = cookieValue;
+  }
+
+  remove() {
+    document.cookie.replace('token', '');
   }
 
   setWithExpiryInYears(key: string, value: string, expires: number) {
@@ -35,8 +41,8 @@ export class CookieService {
   }
 
   setWithExpiryInMiliseconds(key: string, value: string, expires: number) {
-    var expireDate = new Date();
-    var time = expireDate.getTime() + expires;
+    const expireDate = new Date();
+    const time = expireDate.getTime() + expires;
     expireDate.setTime(time);
 
     this.set(key, value, expireDate);
@@ -48,10 +54,10 @@ export class CookieService {
 
     const prefix = `${key}=`;
     for (const pair of pairs) {
-      if (pair.indexOf(prefix) == 0) {
+      if (pair.indexOf(prefix) === 0) {
         return pair.substring(prefix.length);
       }
     }
-    return "";
+    return '';
   }
 }

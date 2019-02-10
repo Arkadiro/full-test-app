@@ -7,13 +7,15 @@
     </div>
     <div>
       <ul class="nav navbar-nav">
-        <li><a>All jokes</a></li>
+        <li><a a routerLink="/jokes">All jokes</a></li>
+        <li *ngIf="userLoggedin && user" [routerLink]="['/user/profile', user.id]"><a style="cursor: pointer">Profile</a></li>
+        <li *ngIf="userLoggedin && user" routerLink="/create/joke"><a style="cursor: pointer">Create Joke</a></li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
-        <li><a routerLink="/auth/login">Login</a> </li>
-        <li><a routerLink="/auth/register">Register</a> </li>
-        <li><a>Logout</a> </li>
+        <li *ngIf="!userLoggedin"><a routerLink="/auth/login">Login</a> </li>
+        <li *ngIf="!userLoggedin"><a routerLink="/auth/register">Register</a> </li>
+        <li *ngIf="userLoggedin" (click)="logout()"><a style="cursor: pointer;">Logout</a> </li>
       </ul>
     </div>
   </div>
