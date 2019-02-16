@@ -1,6 +1,6 @@
 <div *ngIf="jokes" class="container">
-  <div class="row">
-    <div *ngFor="let joke of jokes" class="col-md-4 col-md-offset-1">
+  <div class="container-flex">
+    <div *ngFor="let joke of jokes" class="item">
       <div class="panel panel-default">
         <div class="panel-heading">
           {{joke.title}}

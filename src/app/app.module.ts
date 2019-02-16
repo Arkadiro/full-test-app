@@ -17,6 +17,8 @@ import { ProfileComponent } from './profile/profile.component';
 import { UserService } from './services/user.service';
 import { JokeComponent } from './joke/joke.component';
 import { JokesComponent } from './jokes/jokes.component';
+import { HomeComponent } from './home/home.component';
+import { CapitalizePipe } from './pipes/capitalize.pipe';
 
 
 @NgModule({
@@ -27,7 +29,9 @@ import { JokesComponent } from './jokes/jokes.component';
     LoginComponent,
     ProfileComponent,
     JokeComponent,
-    JokesComponent
+    JokesComponent,
+    HomeComponent,
+    CapitalizePipe
   ],
   imports: [
     BrowserModule,

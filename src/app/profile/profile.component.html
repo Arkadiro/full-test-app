@@ -1,4 +1,4 @@
-<div *ngIf="user" class="col-lg-4">
+<div *ngIf="loaded" class="col-lg-4">
   <div class="panel panel-default">
     <div class="panel-heading">
       <p class="text-center">{{ user.name }}'s profile</p>
@@ -22,7 +22,7 @@
         Joined Date: 24th Dec 2009
       </p>
       <br />
-      <p *ngIf="isAuthUserProfile()" class="text-center">
+      <p class="text-center">
         <a class="btn btn-info">Edit your profile</a>
       </p>
     </div>

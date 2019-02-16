@@ -1,12 +1,13 @@
 import { Config } from './../config/config';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { UserData } from '../classes/UserData';
-import { UserModel } from '../classes/UserModel';
 
 @Injectable()
 export class UserService {
+
+  public users: UserData[] = [];
 
   private httpOptions;
 
@@ -23,16 +24,25 @@ export class UserService {
 
   }
 
-  getUserById(id: number) {
-    if (id === this.authService.getAuthUser().id) {
-      return this.authService.getAuthUser();
-    }
-
+  getUserById(id) {
     return this.http.post(`${Config.API_URL}/api/user?id=${id}`, id, this.httpOptions)
       .toPromise()
       .then((response: any) => {
         const userData = new UserData(response.data.id, response.data.name, response.data.email);
         return userData;
       });
+   }
+
+  getUsers() {
+    if (this.users.length === 0) {
+      return this.http.post(`${Config.API_URL}/api/users`, this.httpOptions)
+        .toPromise()
+        .then((response: any) => {
+          this.users.push(response.data);
+          return this.users;
+        });
+    } else {
+    return this.users;
+    }
   }
 }
