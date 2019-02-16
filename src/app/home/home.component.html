@@ -1,0 +1,4 @@
+<h1 *ngIf="userName === 'guest'">
+  Hello Guest!
+</h1>
+<app-dashboard *ngIf="userName !== 'guest'" [userName]="userName | capitalize"></app-dashboard>

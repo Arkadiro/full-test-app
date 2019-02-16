@@ -1,8 +1,7 @@
-import { AuthService } from './../services/auth.service';
 import { UserData } from './../classes/UserData';
 import { UserService } from './../services/user.service';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params} from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -10,22 +9,24 @@ import { ActivatedRoute, Params } from '@angular/router';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  public id: number;
+  public paramsId = 0;
+  public id = 0;
   public user: UserData;
+  public loaded = false;
 
-
-  constructor(private router: ActivatedRoute, private userService: UserService, private authService: AuthService) { }
+  constructor(private router: ActivatedRoute,  private userService: UserService) { }
 
   async ngOnInit() {
-    this.router.params.subscribe((params: Params) => {
-      this.id = +params.id;
+    await this.router.params.subscribe((params: Params) => {
+      this.paramsId = params.id as number;
     });
-    this.user = await this.userService.getUserById(this.id);
-    console.log(this.user);
+    this.user = await this.userService.getUserById(this.paramsId);
+    this.id = JSON.parse(localStorage.getItem('user')).id;
+    this.loaded = true;
   }
 
-  isAuthUserProfile(): boolean {
-    return this.id === this.authService.getAuthUser().id;
+  async isAuthUserProfile(): Promise<boolean> {
+    return +this.id === +this.paramsId;
   }
 
 }

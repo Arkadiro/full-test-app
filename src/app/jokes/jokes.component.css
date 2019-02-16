@@ -1,0 +1,10 @@
+.container-flex {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.item{
+  width: 350px;
+  height: 200px;
+  padding: 30px;
+}

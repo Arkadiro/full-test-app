@@ -4,14 +4,17 @@ import { HttpClient } from '@angular/common/http';
 import { Config } from './../config/config';
 import { Router } from '@angular/router';
 import { CookieService } from './cookie.sevice';
+import { UserData } from '../classes/UserData';
+import { Subject, Observable} from 'rxjs';
 
 
 @Injectable()
 export class AuthService {
 
   public userLoggedIn = false;
-
+  public user: UserData;
   private _sessionId: string;
+  private storageSub: Subject<string> = new Subject();
 
   constructor(
     private http: HttpClient,
@@ -21,6 +24,7 @@ export class AuthService {
   }
 
   register(name: string, email: string, password: string): Promise<UserModel> {
+    localStorage.clear();
     return this.http.post(`${Config.API_URL}/api/signup/`, {name, email, password})
             .toPromise()
             .then((response: UserModel) => {
@@ -30,40 +34,54 @@ export class AuthService {
   }
 
   saveUser(userModel: UserModel): void {
+    localStorage.clear();
     localStorage.setItem('token', userModel.access_token);
     localStorage.setItem('user', JSON.stringify(userModel.data));
     // this.cookieService.set('token', userModel.access_token);
-    this.router.navigate(['/dashboard']);
+    this.storageSub.next('changed')
+    this.router.navigate(['/']);
   }
 
   login(email: string, password: string): Promise<UserModel> {
+    localStorage.clear();
     return this.http.post(`${Config.API_URL}/api/login`, {email, password})
       .toPromise()
       .then((response: UserModel) => {
-        console.log(response);
         const userModel = new UserModel(response.access_token, response.data);
         return userModel;
-      })
-      .finally(() => location.reload() );
+      });
+      // .finally(() => location.reload() );
   }
 
   logout() {
     localStorage.clear();
     this.cookieService.remove();
     this.router.navigate(['/auth/login']);
-    location.reload();
+    this.storageSub.next('changed')
+    // location.reload();
   }
 
   isLoggedIn(): boolean {
     const token = localStorage.getItem('token');
     if (token) {
-      // this.userLoggedIn = true;
       return true;
     }
     return false;
   }
+
+  watchStorage(): Observable<any> {
+    return this.storageSub.asObservable();
+  }
+
   getAuthUser() {
-    return JSON.parse(localStorage.getItem('user'));
+    if (localStorage.getItem('user') !== null) {
+      const user = JSON.parse(localStorage.getItem('user'));
+      console.log(user);
+      return user;
+
+    } else {
+      return new UserData('0', 'guest', '');
+    }
   }
 
   getToken() {

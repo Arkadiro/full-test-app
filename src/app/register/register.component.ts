@@ -19,7 +19,7 @@ export class RegisterComponent implements OnInit {
       .then((userModel) => {
         this.authService.saveUser(userModel);
       });
-    console.log(form.value.name, form.value.email, form.value.password);
+    // console.log(form.value.name, form.value.email, form.value.password);
   }
 
 }

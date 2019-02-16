@@ -10,24 +10,25 @@ class Joke {
 
 @Injectable()
 export class JokeService {
-  private author = 'anon';
+  private author = '';
   private httpOptions;
 
   constructor(
     private authService: AuthService,
     private http: HttpClient
   ) {
-    this.author = this.authService.getAuthUser().name;
 
     this.httpOptions = {
       headers: new HttpHeaders({
-        'Authorization':  `Bearer ${this.authService.getToken()}`
+        'Authorization':  `Bearer ${this.authService.getToken()}`,
+        'Access-Control-Allow-Origin': '*'
       })
     };
 
   }
 
   addJoke(title: string, body: string) {
+    this.author = this.authService.getAuthUser().name;
     const author = this.author;
     return this.http.post(`${Config.API_URL}/api/addjoke/`, {title, body, author})
             .toPromise()

@@ -15,7 +15,6 @@ export class JokeComponent implements OnInit {
   }
 
   onSubmit(form) {
-    console.log(form.value.title);
     this.jokeService.addJoke(form.value.title, form.value.body)
       .then((res) => { console.log(res); } );
     this.router.navigate(['/jokes']);

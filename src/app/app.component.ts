@@ -1,5 +1,6 @@
+import { Subscription } from 'rxjs';
 import { AuthService } from './services/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserData } from './classes/UserData';
 
 
@@ -8,20 +9,28 @@ import { UserData } from './classes/UserData';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'full-test-app';
   public user: UserData;
-  public userLoggedin = false;
+  private subscription: Subscription;
 
-  constructor(private authService: AuthService) {
-    this.user = this.authService.getAuthUser();
-  }
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {
-    this.userLoggedin = this.authService.isLoggedIn();
+    this.user = this.authService.getAuthUser();
+    this.subscription = this.authService.watchStorage().subscribe(() => this.user = this.authService.getAuthUser());
   }
 
   public logout() {
     this.authService.logout();
   }
+
+  public userLoggedIn() {
+    return this.authService.isLoggedIn();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
 }
