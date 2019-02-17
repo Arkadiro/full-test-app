@@ -1,3 +1,4 @@
+import { NotifyService } from './notify.service';
 import { UserModel } from './../classes/UserModel';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -19,7 +20,9 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private cookieService: CookieService) {
+    private cookieService: CookieService,
+    private notifyService: NotifyService
+  ) {
     this._sessionId = cookieService.get('sessionId');
   }
 
@@ -40,6 +43,12 @@ export class AuthService {
     // this.cookieService.set('token', userModel.access_token);
     this.storageSub.next('changed')
     this.router.navigate(['/']);
+  }
+
+  updateUser(user: UserData): void {
+    localStorage.removeItem('user');
+    localStorage.setItem('user', JSON.stringify(user));
+    this.storageSub.next('changed')
   }
 
   login(email: string, password: string): Promise<UserModel> {

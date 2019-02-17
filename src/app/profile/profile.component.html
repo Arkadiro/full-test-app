@@ -22,16 +22,16 @@
         Joined Date: 24th Dec 2009
       </p>
       <br />
-      <p class="text-center">
-        <a class="btn btn-info">Edit your profile</a>
+      <p class="text-center" *ngIf="isAuthUserProfile()">
+        <a class="btn btn-info" routerLink="edit">Edit your profile</a>
       </p>
     </div>
   </div>
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <div class="text-center">
-        <a class="btn btn-default">Follow</a>
-      </div>
-    </div>
+  <div *ngIf="!isAuthUserProfile()">
+      <app-follow [currentProfileId]="paramsId"></app-follow>
   </div>
+</div>
+
+<div class="col-lg-8">
+  <router-outlet></router-outlet>
 </div>

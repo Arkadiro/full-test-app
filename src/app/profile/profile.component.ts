@@ -1,6 +1,7 @@
+import { Subscription } from 'rxjs';
 import { UserData } from './../classes/UserData';
 import { UserService } from './../services/user.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params} from '@angular/router';
 
 @Component({
@@ -8,13 +9,21 @@ import { ActivatedRoute, Params} from '@angular/router';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
   public paramsId = 0;
   public id = 0;
   public user: UserData;
   public loaded = false;
+  private subscription: Subscription;
 
-  constructor(private router: ActivatedRoute,  private userService: UserService) { }
+  constructor(
+    private router: ActivatedRoute,
+    private userService: UserService
+  ) {
+    this.subscription = this.userService.usersProfileUpdated.subscribe(
+      (user) => this.user = user
+    );
+  }
 
   async ngOnInit() {
     await this.router.params.subscribe((params: Params) => {
@@ -25,8 +34,12 @@ export class ProfileComponent implements OnInit {
     this.loaded = true;
   }
 
-  async isAuthUserProfile(): Promise<boolean> {
+  isAuthUserProfile(): boolean {
     return +this.id === +this.paramsId;
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
 }
