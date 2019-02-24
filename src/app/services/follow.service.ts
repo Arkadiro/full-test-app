@@ -39,17 +39,6 @@ export class FollowService {
       });
   }
 
-  isFollow(user: number, follower: number) {
-    const followModel  = new Follow();
-    followModel.user = +user;
-    followModel.follower = +follower;
-    return this.http.post(`${Config.API_URL}/api/isfollow/`, {followModel}, this.httpOptions)
-            .toPromise()
-            .then((response: boolean | ArrayBuffer) => {
-              return response as boolean;
-            });
-  }
-
   unFollow(user: number, follower: number) {
     const followModel  = new Follow();
     followModel.user = +user;
@@ -61,4 +50,16 @@ export class FollowService {
               return response;
             });
   }
+
+  testFollow(user: number, follower: number) {
+    const followModel  = new Follow();
+    followModel.user = +user;
+    followModel.follower = +follower;
+    return this.http.post(`${Config.API_URL}/api/testfollow/`, {followModel}, this.httpOptions)
+            .toPromise()
+            .then((response: boolean | ArrayBuffer) => {
+              return response as boolean;
+            });
+  }
+
 }

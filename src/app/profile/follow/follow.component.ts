@@ -1,3 +1,4 @@
+import { NotifyService } from './../../services/notify.service';
 import { FollowService } from './../../services/follow.service';
 import { Component, OnInit, Input } from '@angular/core';
 
@@ -10,24 +11,28 @@ export class FollowComponent implements OnInit {
 
   @Input()
   currentProfileId;
-  public isfollowing: any = false;
+  public isfollowing = false;
 
-  constructor(private followService: FollowService) { }
+  constructor(private followService: FollowService, private notifyService: NotifyService) { }
 
   async ngOnInit() {
     const id = JSON.parse(localStorage.getItem('user')).id;
-    this.isfollowing = await this.followService.isFollow(this.currentProfileId, id) as boolean;
+    this.isfollowing = await this.followService.testFollow(this.currentProfileId, id);
     console.log(this.isfollowing);
   }
 
   follow() {
     const id = JSON.parse(localStorage.getItem('user')).id;
-    this.followService.addFollow(this.currentProfileId, id);
+    this.followService.addFollow(this.currentProfileId, id).finally(
+      () => {this.isfollowing = true;}
+    );
   }
 
   unFollow() {
     const id = JSON.parse(localStorage.getItem('user')).id;
-    this.followService.unFollow(this.currentProfileId, id);
+    this.followService.unFollow(this.currentProfileId, id).finally(
+      () => {this.isfollowing = false;}
+    );
   }
 
 }

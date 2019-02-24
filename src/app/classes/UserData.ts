@@ -3,5 +3,6 @@ export class UserData {
       public id: string,
       public name: string,
       public email: string,
+      public joined: string
     ) {}
 }

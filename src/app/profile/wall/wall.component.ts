@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { JokeService } from './../../services/joke.service';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-wall',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WallComponent implements OnInit {
 
-  constructor() { }
+  public jokes = [];
 
-  ngOnInit() {
+  constructor(private jokeService: JokeService, private activatedRoute: ActivatedRoute) { }
+
+  async ngOnInit() {
+    const userId = this.activatedRoute.snapshot.params.id;
+    console.log(userId);
+    this.jokes = await this.jokeService.getUserJokes(userId);
   }
 
 }

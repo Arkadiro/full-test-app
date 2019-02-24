@@ -6,6 +6,7 @@ class Joke {
   title: string;
   body: string;
   author: string;
+  id: string;
 }
 
 @Injectable()
@@ -30,7 +31,8 @@ export class JokeService {
   addJoke(title: string, body: string) {
     this.author = this.authService.getAuthUser().name;
     const author = this.author;
-    return this.http.post(`${Config.API_URL}/api/addjoke/`, {title, body, author})
+    const id = this.authService.getAuthUser().id;
+    return this.http.post(`${Config.API_URL}/api/addjoke/`, {title, body, author, id})
             .toPromise()
             .then((response: Joke) => {
               const joke: Joke = response;
@@ -42,6 +44,15 @@ export class JokeService {
     return this.http.post(`${Config.API_URL}/api/jokes/`, this.httpOptions)
             .toPromise()
             .then((response: Joke[]) => {
+              const joke: Joke[] = response;
+              return joke;
+            });
+  }
+
+  getUserJokes(id) {
+    return this.http.post(`${Config.API_URL}/api/user/jokes`, {id}, this.httpOptions)
+            .toPromise()
+            .then((response: any) => {
               const joke: Joke[] = response;
               return joke;
             });

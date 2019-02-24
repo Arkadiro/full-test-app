@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable, EventEmitter } from '@angular/core';
 import { AuthService } from './auth.service';
 import { UserData } from '../classes/UserData';
+import { GetDate } from '../converters/converters';
 
 @Injectable()
 export class UserService {
@@ -29,7 +30,7 @@ export class UserService {
     return this.http.post(`${Config.API_URL}/api/user`, {id}, this.httpOptions)
       .toPromise()
       .then((response: any) => {
-        const userData = new UserData(response.data.id, response.data.name, response.data.email);
+        const userData = new UserData(response.data.id, response.data.name, response.data.email, GetDate(response.data.created_at));
         return userData;
       });
    }
@@ -38,7 +39,7 @@ export class UserService {
     return this.http.put(`${Config.API_URL}/api/update/user`, {user}, this.httpOptions)
       .toPromise()
       .then((response: any) => {
-        const userData = new UserData(response.id, response.name, response.email);
+        const userData = new UserData(response.id, response.name, response.email, GetDate(response.created_at));
         this.usersProfileUpdated.emit(userData);
         return userData;
       });

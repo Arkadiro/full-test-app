@@ -1,3 +1,17 @@
-<p>
-  wall works!
-</p>
+<div *ngIf="jokes" class="container">
+  <div class="container-flex">
+    <div *ngFor="let joke of jokes" class="item">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          {{joke.title}}
+        </div>
+        <div class="panel-body">
+          <p>{{joke.body}}</p>
+          <br>
+          <p>{{joke.author}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
